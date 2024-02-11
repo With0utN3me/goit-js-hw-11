@@ -32,12 +32,15 @@ searchForm.addEventListener("submit", (event) => {
             safesearch: true,
         })
     };
+    searchInput.value = "";
     fetchImages()
     .then((images) => {
-        if(Object.keys(images).length !== 0){
+        if(Object.keys(images.hits).length !== 0){
+            imageList.innerHTML = "";
             renderImages(images)
         }
         else {
+            imageList.innerHTML = "";
             return iziToast.error({
                 message: "Sorry, there are no images matching your search query. Please try again!",
                 position: `topRight`,
@@ -87,3 +90,11 @@ function renderImages(images) {
     .join("");
     imageList.insertAdjacentHTML("beforeend", markup);
 }
+let gallery = new SimpleLightbox(`.image-list a`,
+    {
+        captionsData: `alt`,
+        captionDelay: 250,
+    }); 
+    gallery.on('show.simplelightbox', function () {
+        gallery.enableKeyboard;
+    });
