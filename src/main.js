@@ -9,6 +9,7 @@ import "izitoast/dist/css/iziToast.min.css";
 import renderImages from "./js/render-functions"
 import fetchImages from "./js/pixabay-api";
 
+export {searchParams, baseURL, loader, gallery, imageList, searchInput};
 
 const searchInput = document.querySelector("#search-input");
 const searchForm = document.querySelector(".form");
@@ -63,4 +64,3 @@ searchForm.addEventListener("submit", (event) => {
     .catch((error) => console.log(error));
 })
 
-export {searchParams, baseURL, loader, gallery, imageList, searchInput};
