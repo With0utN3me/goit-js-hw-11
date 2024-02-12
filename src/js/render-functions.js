@@ -1,68 +1,37 @@
-// Описаний у документації
-import iziToast from "izitoast";
-// Додатковий імпорт стилів
-import "izitoast/dist/css/iziToast.min.css";
-
-const delayInput = document.querySelector(`input[name="delay"]`);
-const radioButtons = document.querySelectorAll(`input[type="radio"]`);
-const form = document.querySelector(".form");
-
-// Оголошення загальних функцій
-let delay;
-let shouldResolve;
-
-// Функція створення промісів
-const makePromise = () => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-                if(shouldResolve) {
-                    resolve(`Fulfilled promise in ${delay}ms`
-                    )
-                } else {
-                    reject(`Rejected promise in ${delay}ms`
-                    )
-                }
-            }, delay);
-});
-};
-
-//Івент лісенер для форми
-form.addEventListener("submit", (event) => {
-    event.preventDefault()
-    //Валідація інпуту делей
-    if(delayInput.value.includes("+") || delayInput.value.includes("-")){
-        return iziToast.error({
-            message: "Should not include + or -",
-            position: `topRight`,
-        });
-    }
-    else{
-        delay = delayInput.value;
-    }
-    //Алгоритми перевірки радіо-кнопки
-    for (const radioButton of radioButtons) {
-        if(radioButton.checked){
-            if(radioButton.value === "fulfilled"){
-                shouldResolve = true;
-            }
-            else{
-                shouldResolve = false;
-            }
-            break;
-        }
-    }
-    //Виклик функції з передачею значень
-    makePromise(delay, shouldResolve)
-    .then(value => {
-        iziToast.success({
-            message: value,
-            position: `topRight`,
-        });
+import {loader, gallery, imageList, searchInput} from "/main.js"
+function renderImages(images) {
+    const markup = images.hits
+    .map((image) => {
+        return `
+            <li class="list-item">
+            <a class="gallery-link" href="${image.largeImageURL}">
+            <img class="gallery-image" src="${image.webformatURL}" alt="${image.tags}" />
+            </a>
+            <ul class="stats-list">
+                <li class="stats-list-item">
+                    <p class="stats">Likes</p>
+                    <p class="stats-info">${image.likes}</p>
+                </li>
+                <li class="stats-list-item">
+                    <p class="stats">Views</p>
+                    <p class="stats-info">${image.views}</p>
+                </li>
+                <li class="stats-list-item">
+                    <p class="stats">Comments</p>
+                    <p class="stats-info">${image.comments}</p>
+                </li>
+                <li class="stats-list-item">
+                    <p class="stats">Downloads</p>
+                    <p class="stats-info">${image.downloads}</p>
+                </li>
+            </ul>
+            </li>
+        `
     })
-    .catch(error => {
-        iziToast.error({
-            message: error,
-            position: `topRight`,
-        });
-    })
-})
+    .join("");
+    loader.classList.add("hidden");
+    imageList.insertAdjacentHTML("beforeend", markup);
+    gallery.refresh()
+    searchInput.value = "";
+}
+export default renderImages;
