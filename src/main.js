@@ -11,9 +11,19 @@ import "izitoast/dist/css/iziToast.min.css";
 const searchInput = document.querySelector("#search-input");
 const searchForm = document.querySelector(".form");
 const imageList = document.querySelector(".image-list")
+const loader = document.querySelector(".loader");
 
 const baseURL = `https://pixabay.com/api/?`;
 let searchParams = {}
+
+let gallery = new SimpleLightbox(`.image-list a`,
+    {
+        captionsData: `alt`,
+        captionDelay: 250,
+    }); 
+    gallery.on('show.simplelightbox', function () {
+        gallery.enableKeyboard;
+    });
 
 searchForm.addEventListener("submit", (event) => {
     event.preventDefault()
@@ -24,6 +34,7 @@ searchForm.addEventListener("submit", (event) => {
         });
     }
     else{
+        loader.classList.remove("hidden");
         searchParams = new URLSearchParams({
             key: `42308406-6cac9d7b9797eefd79d1793c9`,
             q: encodeURIComponent(searchInput.value.trim()),
@@ -40,6 +51,7 @@ searchForm.addEventListener("submit", (event) => {
             renderImages(images)
         }
         else {
+            loader.classList.add("hidden");
             imageList.innerHTML = "";
             return iziToast.error({
                 message: "Sorry, there are no images matching your search query. Please try again!",
@@ -88,13 +100,7 @@ function renderImages(images) {
         `
     })
     .join("");
+    loader.classList.add("hidden");
     imageList.insertAdjacentHTML("beforeend", markup);
+    gallery.refresh()
 }
-let gallery = new SimpleLightbox(`.image-list a`,
-    {
-        captionsData: `alt`,
-        captionDelay: 250,
-    }); 
-    gallery.on('show.simplelightbox', function () {
-        gallery.enableKeyboard;
-    });

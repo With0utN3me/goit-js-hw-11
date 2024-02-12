@@ -50,6 +50,11 @@ a {
 .submit-button:hover{
     background-color: #6C8CFF;
 }
+.loader-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .loader {
     display: inline-block;
     font-size: 48px;
@@ -140,4 +145,7 @@ a {
     font-size: 12px;
     line-height: 2;
     letter-spacing: 0.04em; 
+}
+.hidden{
+    display: none;
 }
